@@ -3,12 +3,10 @@ import yt_dlp
 import os
 from PIL import Image
 
-# --- 1. ページ全体の基本設定（タブのアイコン設定） ---
-# 事前にGitHubに「logo.png」という名前で画像をアップロードしておいてください
+# --- 1. ページ全体の基本設定 ---
 try:
     icon_image = Image.open("logo.png")
 except:
-    # 画像がない、または読み込めない場合の予備
     icon_image = "📥"
 
 st.set_page_config(
@@ -17,65 +15,78 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. モダン・デザイン（CSS） ---
+# --- 2. 徹底的にモダンなデザイン（CSS） ---
 st.markdown("""
     <style>
-    /* 全体の背景を白に */
+    /* メイン背景 */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff;
-        color: #333333;
     }
     
-    /* モダンなタイトルロゴ（黒ベースで力強く） */
+    /* サイドバーの高級化 */
+    [data-testid="stSidebar"] {
+        background-color: #fcfcfc !important;
+        border-right: 1px solid #eee;
+    }
+    
+    /* サイドバーの文字色（超重要：ここを黒く） */
+    [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] h3 {
+        color: #222 !important;
+        font-family: 'Inter', sans-serif;
+        font-weight: 700 !important;
+    }
+
+    /* タイトルロゴ */
     .modern-logo {
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        font-size: 42px !important;
-        font-weight: 800 !important;
-        color: #1a1a1a;
+        font-family: 'Avenir', 'Helvetica Neue', sans-serif;
+        font-size: 36px !important;
+        font-weight: 900 !important;
+        color: #000;
         text-align: center;
-        padding: 40px 0 5px 0;
-        letter-spacing: -1px;
-    }
-    
-    .subtitle {
-        text-align: center;
-        color: #666;
-        font-size: 14px;
-        margin-bottom: 40px;
+        padding-top: 30px;
+        letter-spacing: -1.5px;
     }
 
-    /* 入力エリア（角を少し丸く） */
+    /* 入力エリアのモダン化 */
     .stTextInput>div>div>input {
-        border-radius: 10px !important;
-        border: 1px solid #ddd !important;
-        padding: 12px !important;
+        border-radius: 8px !important;
+        border: 1px solid #e0e0e0 !important;
+        background-color: #fff !important;
+        transition: 0.3s;
+    }
+    .stTextInput>div>div>input:focus {
+        border-color: #007bff !important;
+        box-shadow: 0 0 0 3px rgba(0,123,255,0.1) !important;
     }
 
-    /* モダンなブルーボタン */
-    .stButton>button {
+    /* 【修正】UNLOCKボタンをカッコよく！ */
+    div.stButton > button {
         width: 100%;
+        height: 45px;
         border-radius: 10px;
-        background-color: #007bff !important;
-        color: white !important;
-        font-weight: 600;
         border: none;
-        padding: 10px 0;
-        transition: all 0.3s ease;
+        background: linear-gradient(135deg, #222 0%, #444 100%) !important;
+        color: white !important;
+        font-weight: 600 !important;
+        font-size: 16px !important;
+        letter-spacing: 1px;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     
-    .stButton>button:hover {
-        background-color: #0056b3 !important;
-        box-shadow: 0 4px 12px rgba(0,123,255,0.3);
+    div.stButton > button:hover {
+        background: linear-gradient(135deg, #444 0%, #666 100%) !important;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        transform: translateY(-2px);
     }
-
-    /* サイドバーの調整 */
-    section[data-testid="stSidebar"] {
-        background-color: #f1f3f5;
+    
+    div.stButton > button:active {
+        transform: translateY(1px);
     }
     </style>
     
     <div class="modern-logo">ATER YouTube Downloader</div>
-    <div class="subtitle">High-speed media extraction system</div>
+    <div style="text-align: center; color: #999; font-size: 12px; margin-bottom: 40px;">Ver 2.0 Premium Design</div>
     """, unsafe_allow_html=True)
 
 # --- 3. 認証機能 ---
@@ -84,7 +95,7 @@ if "authenticated" not in st.session_state:
 
 with st.sidebar:
     st.markdown("### 🛡️ SECURITY")
-    input_password = st.text_input("PASSWORD", type="password")
+    input_password = st.text_input("PASSWORD", type="password", placeholder="••••••••")
     if st.button("UNLOCK"):
         if input_password == "ater777":
             st.session_state["authenticated"] = True
@@ -92,30 +103,21 @@ with st.sidebar:
         else:
             st.error("ACCESS DENIED")
 
-# --- 4. メイン機能（認証後） ---
+# --- 4. メイン機能 ---
 if st.session_state["authenticated"]:
-    url = st.text_input("", placeholder="YouTubeのURLをここに貼り付けてください...")
+    url = st.text_input("", placeholder="ここにURLをペースト...")
     
-    st.write("") # スペース用
-    
-    if st.button("動画 (MP4) をダウンロード準備"):
+    if st.button("PREPARE DOWNLOAD"):
         if url:
-            with st.spinner("解析・ダウンロード中..."):
+            with st.spinner("Processing..."):
                 try:
-                    # yt-dlpの設定
                     ydl_opts = {'format': 'best', 'outtmpl': 'video.mp4'}
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         ydl.download([url])
-                    
-                    # ダウンロードボタンを表示
                     with open("video.mp4", "rb") as f:
-                        st.download_button("📥 ファイルを保存する", f, file_name="ater_video.mp4")
-                    
-                    # 使い終わったらサーバーから消す
+                        st.download_button("📥 DOWNLOAD MP4", f, file_name="ater_video.mp4")
                     os.remove("video.mp4")
                 except Exception as e:
-                    st.error(f"エラーが発生しました: {e}")
-        else:
-            st.warning("URLが入力されていません")
+                    st.error(f"Error: {e}")
 else:
-    st.info("利用を開始するにはサイドバーにパスワードを入力してください。")
+    st.info("Please unlock to use this system.")
