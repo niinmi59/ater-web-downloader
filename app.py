@@ -15,78 +15,67 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. 徹底的にモダンなデザイン（CSS） ---
+# --- 2. 徹底的に洗練されたモダン・デザイン（CSS） ---
 st.markdown("""
     <style>
-    /* メイン背景 */
+    /* 全体の背景 */
     [data-testid="stAppViewContainer"] {
         background-color: #ffffff;
     }
     
-    /* サイドバーの高級化 */
+    /* サイドバーの調整 */
     [data-testid="stSidebar"] {
         background-color: #fcfcfc !important;
-        border-right: 1px solid #eee;
+        border-right: 1px solid #f0f0f0;
     }
     
-    /* サイドバーの文字色（超重要：ここを黒く） */
+    /* サイドバーの文字（SECURITYなど）をくっきり黒に */
     [data-testid="stSidebar"] p, [data-testid="stSidebar"] span, [data-testid="stSidebar"] h3 {
-        color: #222 !important;
-        font-family: 'Inter', sans-serif;
+        color: #111111 !important;
         font-weight: 700 !important;
+        font-family: 'Inter', sans-serif;
     }
 
-    /* タイトルロゴ */
+    /* メインロゴ */
     .modern-logo {
-        font-family: 'Avenir', 'Helvetica Neue', sans-serif;
+        font-family: 'Helvetica Neue', Arial, sans-serif;
         font-size: 36px !important;
-        font-weight: 900 !important;
-        color: #000;
+        font-weight: 800 !important;
+        color: #1a1a1a;
         text-align: center;
         padding-top: 30px;
-        letter-spacing: -1.5px;
+        letter-spacing: -1px;
     }
 
-    /* 入力エリアのモダン化 */
-    .stTextInput>div>div>input {
-        border-radius: 8px !important;
-        border: 1px solid #e0e0e0 !important;
-        background-color: #fff !important;
-        transition: 0.3s;
-    }
-    .stTextInput>div>div>input:focus {
-        border-color: #007bff !important;
-        box-shadow: 0 0 0 3px rgba(0,123,255,0.1) !important;
-    }
-
-    /* 【修正】UNLOCKボタンをカッコよく！ */
+    /* 【修正】ボタンのデザイン：見やすさと高級感を両立 */
     div.stButton > button {
         width: 100%;
-        height: 45px;
-        border-radius: 10px;
+        height: 48px;
+        border-radius: 12px;
         border: none;
-        background: linear-gradient(135deg, #222 0%, #444 100%) !important;
-        color: white !important;
-        font-weight: 600 !important;
+        background-color: #007bff !important; /* 清潔感のあるブルー */
+        color: #ffffff !important; /* 文字を真っ白に */
+        font-weight: 700 !important;
         font-size: 16px !important;
-        letter-spacing: 1px;
-        transition: all 0.3s ease !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,123,255,0.2);
+        transition: all 0.2s ease;
     }
     
     div.stButton > button:hover {
-        background: linear-gradient(135deg, #444 0%, #666 100%) !important;
-        box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-        transform: translateY(-2px);
+        background-color: #0056b3 !important;
+        box-shadow: 0 6px 18px rgba(0,123,255,0.3);
+        transform: translateY(-1px);
     }
-    
-    div.stButton > button:active {
-        transform: translateY(1px);
+
+    /* 入力エリア */
+    .stTextInput>div>div>input {
+        border-radius: 10px !important;
+        border: 1px solid #ddd !important;
     }
     </style>
     
     <div class="modern-logo">ATER YouTube Downloader</div>
-    <div style="text-align: center; color: #999; font-size: 12px; margin-bottom: 40px;">Ver 2.0 Premium Design</div>
+    <div style="text-align: center; color: #888; font-size: 14px; margin-bottom: 40px;">Professional Media Tool</div>
     """, unsafe_allow_html=True)
 
 # --- 3. 認証機能 ---
@@ -95,8 +84,8 @@ if "authenticated" not in st.session_state:
 
 with st.sidebar:
     st.markdown("### 🛡️ SECURITY")
-    input_password = st.text_input("PASSWORD", type="password", placeholder="••••••••")
-    if st.button("UNLOCK"):
+    input_password = st.text_input("PASSWORD", type="password", placeholder="Enter your key")
+    if st.button("UNLOCK SYSTEM"):
         if input_password == "ater777":
             st.session_state["authenticated"] = True
             st.success("ACCESS GRANTED")
@@ -105,9 +94,9 @@ with st.sidebar:
 
 # --- 4. メイン機能 ---
 if st.session_state["authenticated"]:
-    url = st.text_input("", placeholder="ここにURLをペースト...")
+    url = st.text_input("", placeholder="ここにURLを貼り付けてください")
     
-    if st.button("PREPARE DOWNLOAD"):
+    if st.button("DOWNLOAD (MP4)"):
         if url:
             with st.spinner("Processing..."):
                 try:
@@ -115,9 +104,9 @@ if st.session_state["authenticated"]:
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         ydl.download([url])
                     with open("video.mp4", "rb") as f:
-                        st.download_button("📥 DOWNLOAD MP4", f, file_name="ater_video.mp4")
+                        st.download_button("📥 SAVE TO DEVICE", f, file_name="ater_video.mp4")
                     os.remove("video.mp4")
                 except Exception as e:
                     st.error(f"Error: {e}")
 else:
-    st.info("Please unlock to use this system.")
+    st.info("Please enter password in the sidebar.")
