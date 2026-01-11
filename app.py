@@ -23,7 +23,7 @@ st.markdown("""
         background-color: #ffffff;
     }
     
-    /* サイドバーの調整 */
+    /* サイドバーの背景を白っぽく */
     [data-testid="stSidebar"] {
         background-color: #fcfcfc !important;
         border-right: 1px solid #f0f0f0;
@@ -47,66 +47,15 @@ st.markdown("""
         letter-spacing: -1px;
     }
 
-    /* 【修正】ボタンのデザイン：見やすさと高級感を両立 */
+    /* 【修正】ボタンのデザイン：黒背景に白文字で高級感を出す */
     div.stButton > button {
         width: 100%;
         height: 48px;
         border-radius: 12px;
         border: none;
-        background-color: #007bff !important; /* 清潔感のあるブルー */
-        color: #ffffff !important; /* 文字を真っ白に */
+        background: linear-gradient(135deg, #222 0%, #444 100%) !important; /* さっきの黒グラデ */
+        color: #ffffff !important; /* 文字を真っ白に固定 */
         font-weight: 700 !important;
         font-size: 16px !important;
-        box-shadow: 0 4px 12px rgba(0,123,255,0.2);
-        transition: all 0.2s ease;
-    }
-    
-    div.stButton > button:hover {
-        background-color: #0056b3 !important;
-        box-shadow: 0 6px 18px rgba(0,123,255,0.3);
-        transform: translateY(-1px);
-    }
-
-    /* 入力エリア */
-    .stTextInput>div>div>input {
-        border-radius: 10px !important;
-        border: 1px solid #ddd !important;
-    }
-    </style>
-    
-    <div class="modern-logo">ATER YouTube Downloader</div>
-    <div style="text-align: center; color: #888; font-size: 14px; margin-bottom: 40px;">Professional Media Tool</div>
-    """, unsafe_allow_html=True)
-
-# --- 3. 認証機能 ---
-if "authenticated" not in st.session_state:
-    st.session_state["authenticated"] = False
-
-with st.sidebar:
-    st.markdown("### 🛡️ SECURITY")
-    input_password = st.text_input("PASSWORD", type="password", placeholder="Enter your key")
-    if st.button("UNLOCK SYSTEM"):
-        if input_password == "ater777":
-            st.session_state["authenticated"] = True
-            st.success("ACCESS GRANTED")
-        else:
-            st.error("ACCESS DENIED")
-
-# --- 4. メイン機能 ---
-if st.session_state["authenticated"]:
-    url = st.text_input("", placeholder="ここにURLを貼り付けてください")
-    
-    if st.button("DOWNLOAD (MP4)"):
-        if url:
-            with st.spinner("Processing..."):
-                try:
-                    ydl_opts = {'format': 'best', 'outtmpl': 'video.mp4'}
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-                        ydl.download([url])
-                    with open("video.mp4", "rb") as f:
-                        st.download_button("📥 SAVE TO DEVICE", f, file_name="ater_video.mp4")
-                    os.remove("video.mp4")
-                except Exception as e:
-                    st.error(f"Error: {e}")
-else:
-    st.info("Please enter password in the sidebar.")
+        letter-spacing: 1px;
+        box-shadow: 0 4px
