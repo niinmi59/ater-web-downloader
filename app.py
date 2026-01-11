@@ -15,7 +15,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# --- 2. モダン・デザイン（CSS） ---
+# --- 2. モダン・デザイン ＆ 右上ロゴ配置（CSS） ---
 st.markdown("""
     <style>
     /* 全体の背景 */
@@ -23,6 +23,16 @@ st.markdown("""
         background-color: #ffffff;
     }
     
+    /* 右上に画像を固定する設定 */
+    .top-right-logo {
+        position: absolute;
+        top: -60px; /* 位置の微調整 */
+        right: 0px;
+        width: 100px; /* ロゴの大きさ */
+        height: auto;
+        z-index: 100;
+    }
+
     /* サイドバーの調整 */
     [data-testid="stSidebar"] {
         background-color: #fcfcfc !important;
@@ -46,7 +56,7 @@ st.markdown("""
         letter-spacing: -1px;
     }
 
-    /* UNLOCKボタンのデザイン（黒背景に白文字） */
+    /* UNLOCKボタンのデザイン（黒グラデーション ＋ 白文字） */
     div.stButton > button {
         width: 100%;
         height: 48px;
@@ -67,6 +77,8 @@ st.markdown("""
         transform: translateY(-1px);
     }
     </style>
+    
+    <img src="https://raw.githubusercontent.com/ATER/your-repo-name/main/logo.png" class="top-right-logo">
     
     <div class="modern-logo">ATER YouTube Downloader</div>
     <div style="text-align: center; color: #888; font-size: 14px; margin-bottom: 40px;">Professional Media Tool</div>
