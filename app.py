@@ -3,68 +3,86 @@ import yt_dlp
 import os
 
 # --- 1. ページ全体の基本設定 ---
-st.set_page_config(page_title="ATER Youtube download", page_icon="⚡", layout="centered")
+st.set_page_config(page_title="ATER YouTube Downloader", page_icon="📥", layout="centered")
 
-# --- 2. デザイン（CSS）背景を白に、ロゴを際立たせる ---
+# --- 2. モダン・デザイン（CSS） ---
 st.markdown("""
     <style>
-    /* 背景を白に設定 */
+    /* 全体の背景を清潔感のある白に */
     [data-testid="stAppViewContainer"] {
-        background-color: #ffffff;
-        background-image: none;
-    }
-
-    /* 強そうなネオンロゴのデザイン（白背景でも映えるように調整） */
-    .strong-logo {
-        font-size: 50px !important;
-        font-weight: 900 !important;
-        color: #1a1a1a !important; /* 文字を黒系に */
-        text-transform: uppercase;
-        text-align: center;
-        text-shadow: 2px 2px 10px rgba(255, 0, 85, 0.5); /* ほのかな光 */
-        letter-spacing: 8px;
-        padding: 20px;
-        margin-bottom: 30px;
-        font-family: 'Arial Black', sans-serif;
-        border-bottom: 5px solid #ff0055; /* 下線で強調 */
-    }
-
-    /* 入力欄とボタンの調整 */
-    .stTextInput>div>div>input {
-        border: 2px solid #ff0055 !important;
+        background-color: #f8f9fa;
+        color: #333333;
     }
     
+    /* モダンなタイトルロゴ */
+    .modern-logo {
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-size: 42px !important;
+        font-weight: 800 !important;
+        color: #1a1a1a;
+        text-align: center;
+        padding: 40px 0 10px 0;
+        letter-spacing: -1px;
+    }
+    
+    .subtitle {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 40px;
+    }
+
+    /* 入力エリアのカスタマイズ */
+    .stTextInput>div>div>input {
+        border-radius: 10px !important;
+        border: 1px solid #ddd !important;
+        padding: 15px !important;
+    }
+
+    /* モダンな青いボタン */
     .stButton>button {
         width: 100%;
-        background-color: #ff0055 !important;
+        border-radius: 10px;
+        background-color: #007bff !important;
         color: white !important;
-        font-weight: bold;
-        border-radius: 5px;
+        font-weight: 600;
+        border: none;
+        padding: 12px 0;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton>button:hover {
+        background-color: #0056b3 !important;
+        box-shadow: 0 4px 12px rgba(0,123,255,0.3);
     }
     </style>
     
-    <div class="strong-logo">ATER SYSTEM</div>
+    <div class="modern-logo">ATER YouTube Downloader</div>
+    <div class="subtitle">High-speed media extraction system</div>
     """, unsafe_allow_html=True)
 
 # --- 3. 認証機能 ---
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
 
+# サイドバーのデザイン
 with st.sidebar:
-    st.title("🛡️ SECURITY")
-    input_password = st.text_input("ENTER PASSWORD", type="password")
+    st.markdown("### 🛡️ Auth")
+    input_password = st.text_input("PASSWORD", type="password")
     if st.button("UNLOCK"):
         if input_password == "ater777":
             st.session_state["authenticated"] = True
-            st.success("ACCESS GRANTED")
+            st.success("認証成功")
         else:
-            st.error("ACCESS DENIED")
+            st.error("パスワードが違います")
 
 # --- 4. メイン機能 ---
 if st.session_state["authenticated"]:
-    url = st.text_input("YouTube URLを入力してください")
+    url = st.text_input("", placeholder="ここにYouTubeのURLを貼り付けてください...")
     
-    if st.button("Video (MP4) を準備"):
+    st.write("") # スペース
+    
+    if st.button("動画を準備する (MP4)"):
         if url:
             with st.spinner("解析中..."):
                 try:
@@ -72,9 +90,11 @@ if st.session_state["authenticated"]:
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                         ydl.download([url])
                     with open("video.mp4", "rb") as f:
-                        st.download_button("MP4を保存", f, file_name="ater_video.mp4")
+                        st.download_button("📥 ダウンロードを開始", f, file_name="ater_video.mp4")
                     os.remove("video.mp4")
                 except Exception as e:
-                    st.error(f"エラー: {e}")
+                    st.error(f"エラーが発生しました: {e}")
+        else:
+            st.warning("URLを入力してください")
 else:
-    st.info("パスワードを入力してください。")
+    st.info("利用するにはサイドバーからパスワードを入力してください。")
